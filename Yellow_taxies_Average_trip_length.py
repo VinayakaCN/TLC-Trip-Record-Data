@@ -17,19 +17,20 @@ from botocore.vendored import requests
 from datetime import datetime, timedelta
 import dask.dataframe as dd
 
+
 import logging
 from shared.config import slack_user ,slack_channel , slack_token
 from slackclient import SlackClient
 
 # variables
-local_file_path = 'FILE_path'  # pass the file path from Airflow variables
+local_file_path = 'File_path'  # pass the file path from Airflow variables  #'/home/vinayaka/yellow_tripdata_2018-06.csv'
 use_column_list = ['tpep_dropoff_datetime' , 'trip_distance' ]
 
 slack_notification_message = ''
 
 
 #
-def get_average_distance(ds, **kwargs):
+def get_average_distance(local_file_path):
     logging.info("> started executing get_average_duration() ")
     global slack_notification_message
     try:
@@ -37,7 +38,7 @@ def get_average_distance(ds, **kwargs):
                          usecols=use_column_list)  # , nrows = '10' , ,usecols = ''
         df['year'] = dd.to_datetime(df['tpep_dropoff_datetime']).dt.year
         df['month'] = dd.to_datetime(df['tpep_dropoff_datetime']).dt.month
-        average_trip_distance  = str(df.groupby(['year', 'month'])['trip_distance'].mean().compute().round(2))
+        average_trip_distance  = str(df.loc[ df['trip_distance']!=0 ].groupby(['year', 'month'])['trip_distance'].mean().compute().round(2))
         logging.info("Average Trip distance : {}".format(average_trip_distance))
 
         rolling_average_trip_distance = str(get_rooling_average_distance(df))
@@ -46,7 +47,7 @@ def get_average_distance(ds, **kwargs):
         slack_notification_message  = """ Note >  Average Trip distance for a month : \n {} \n {} \n Note > from past 45 days Average Trip distance : \n{}""".format(average_trip_distance, '*'*50 ,rolling_average_trip_distance)
 
 
-        return True
+        return slack_notification_message
 
     except Exception as e:
         logging.error('ERROR !!: some issue with File in the location {} and error is {}'.format(local_file_path , str(e)))
@@ -56,12 +57,11 @@ def get_rooling_average_distance(df):
     logging.info("> started executing get_rooling_average_duration() ")
     max_rooling_trip_end_date = datetime.strptime(str(df['tpep_dropoff_datetime'].max().compute()),
                                                   '%Y-%m-%d %H:%M:%S') - timedelta(days=45)
-    return df['trip_distance'].loc[df['tpep_dropoff_datetime'] >= str(max_rooling_trip_end_date)].mean().compute().round(2)
+    return df['trip_distance'].loc[ (df['tpep_dropoff_datetime'] >= str(max_rooling_trip_end_date)) & (df['trip_distance']!=0)].mean().compute().round(2)
 
 
-def get_slack_notification(ds, **kwargs):
+def get_slack_notification(slack_notification_message):
     logging.info("> started executing get_slack_notification() ")
-    global slack_notification_message
     try:
         print("*************** > ",slack_notification_message)
         requests.post(slack_token , json={"channel": slack_channel , "text": slack_notification_message })
@@ -91,7 +91,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
 }
 
-dag = DAG(dag_id="get_taxi_average_trip_distance",
+dag = DAG(dag_id="get_taxi_average_trip_distance_2",
           default_args=default_args,
           schedule_interval= '00 10 * * *',
           catchup=False)
