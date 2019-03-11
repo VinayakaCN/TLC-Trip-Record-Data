@@ -1,4 +1,4 @@
-Analysing the TLC Trip Record Data using AIrflow
+Analysing the TLC Trip Record Data using AIrflow and dask
 
 
 # Overview
@@ -21,6 +21,11 @@ and also Same result message will be sent to your Slack communicator(configurati
   > Download "yellow_tripdata_XXXX.csv" CSV file from NYC website : https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page to a         local directory
   > Deploy the "Yello_taxies_Average_trip_length.py" job into your Airflow service
   > pass the local_file_path as variable called "File_path" to the DAG.
-  > Trigger the 
+  > configure the slack configuration in file shared/config.py
+  > Trigger the DAG
+ 
+ > And also i have attached as sample file for quick checkup "Sample_trip_data.CSV"
+ 
  # test Cases
- > This 
+ > The above DAG will fail if the provide input CSV file does not have column called "'tpep_dropoff_datetime' , 'trip_distance'"
+ 
