@@ -27,5 +27,5 @@ and also Same result message will be sent to your Slack communicator(configurati
  * And also i have attached as sample file for quick checkup "Sample_trip_data.CSV"
  
  # test Cases
- * The above DAG will fail if the provide input CSV file does not have column called "'tpep_dropoff_datetime' , 'trip_distance'"
- 
+ * The above DAG will throw an error if the provide input CSV file does not have column called "'tpep_dropoff_datetime' , 'trip_distance'"
+ * if the date format for the column 'tpep_dropoff_datetime' is not in "2019-01-01 23:59:59" in that case too the program will throw and      error 
