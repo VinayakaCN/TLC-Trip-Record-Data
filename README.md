@@ -29,3 +29,16 @@ and also Same result message will be sent to your Slack communicator(configurati
  # test Cases
  * The above DAG will throw an error if the provide input CSV file does not have column called "'tpep_dropoff_datetime' , 'trip_distance'"
  * if the date format for the column 'tpep_dropoff_datetime' is not in "2019-01-01 23:59:59" in that case too the program will throw and      error 
+ 
+ # Output 
+  The output will be in below format
+  ```
+  Note >  Average Trip distance for a month :
+         year  month
+        2018  1        5.0
+              2        6.0
+        Name: trip_distance, dtype: float64
+         **************************************************
+  Note > from past 45 days Average Trip distance : 5.5
+        
+  '''

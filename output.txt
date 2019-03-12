@@ -1,0 +1,7 @@
+ Note >  Average Trip distance for a month :
+         year  month
+        2018  1        5.0
+              2        6.0
+        Name: trip_distance, dtype: float64
+         **************************************************
+  Note > from past 45 days Average Trip distance : 5.5
