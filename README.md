@@ -38,7 +38,8 @@ and also Same result message will be sent to your Slack communicator(configurati
         2018  1        5.0
               2        6.0
         Name: trip_distance, dtype: float64
-         **************************************************
-  Note > from past 45 days Average Trip distance : 5.5
-        
+  
+  **********************************************************
+  
+  Note > from past 45 days Average Trip distance is : 5.5     
   '''
